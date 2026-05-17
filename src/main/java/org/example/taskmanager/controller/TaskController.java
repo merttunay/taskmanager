@@ -1,5 +1,7 @@
 package org.example.taskmanager.controller;
 
+import jakarta.validation.Valid;
+import org.example.taskmanager.dto.TaskRequest;
 import org.example.taskmanager.entity.Task;
 import org.example.taskmanager.service.TaskService;
 import org.springframework.http.ResponseEntity;
@@ -30,16 +32,17 @@ public class TaskController {
     }
 
     @PostMapping
-    public Task createTask(@RequestBody Task task) {
-        return taskService.createTask(task);
+    public ResponseEntity<Task> createTask(@Valid @RequestBody TaskRequest taskRequest) {
+        Task createdTask = taskService.createTask(taskRequest);
+        return ResponseEntity.status(201).body(createdTask);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(
             @PathVariable Long id,
-            @RequestBody Task task
+            @Valid @RequestBody TaskRequest taskRequest
     ) {
-        Task updatedTask = taskService.updateTask(id, task);
+        Task updatedTask = taskService.updateTask(id, taskRequest);
 
         if (updatedTask != null) {
             return ResponseEntity.ok(updatedTask);
