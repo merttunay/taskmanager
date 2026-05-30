@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.example.taskmanager.dto.TaskRequest;
 import org.example.taskmanager.entity.Task;
 import org.example.taskmanager.service.TaskService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,7 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<Task> createTask(@Valid @RequestBody TaskRequest taskRequest) {
         Task createdTask = taskService.createTask(taskRequest);
-        return ResponseEntity.status(201).body(createdTask);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
     }
 
     @PutMapping("/{id}")
@@ -61,6 +62,7 @@ public class TaskController {
 
         return ResponseEntity.notFound().build();
     }
+
     @GetMapping("/completed/{completed}")
     public List<Task> getTasksByCompletedStatus(@PathVariable boolean completed) {
         return taskService.getTasksByCompletedStatus(completed);
@@ -92,5 +94,11 @@ public class TaskController {
     @GetMapping("/latest")
     public List<Task> getLatestFiveTasks() {
         return taskService.getLatestFiveTasks();
+    }
+
+    @PostMapping("/rollback-test")
+    public ResponseEntity<Task> createTaskWithRollbackTest(@Valid @RequestBody TaskRequest taskRequest) {
+        Task createdTask = taskService.createTaskWithRollbackTest(taskRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
     }
 }
